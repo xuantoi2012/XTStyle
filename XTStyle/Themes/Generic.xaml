@@ -1,0 +1,50 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ===== BASE STYLES - BẮT BUỘC PHẢI CÓ ===== -->
+    <Style TargetType="{x:Type Window}">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
+        <Setter Property="TextOptions.TextHintingMode" Value="Fixed"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+    </Style>
+
+    <Style TargetType="{x:Type TextBlock}">
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
+        <Setter Property="TextOptions.TextHintingMode" Value="Fixed"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+    </Style>
+
+    <!-- ===== MERGE DICTIONARIES ===== -->
+    <ResourceDictionary.MergedDictionaries>
+        <!-- Colors PHẢI Ở ĐẦU TIÊN -->
+        <ResourceDictionary Source="/XTStyle;component/Themes/Colors.xaml"/>
+
+        <!-- Các file khác theo thứ tự -->
+        <ResourceDictionary Source="/XTStyle;component/Themes/Buttons.xaml"/>
+        <ResourceDictionary Source="/XTStyle;component/Themes/TextBoxes.xaml"/>
+        <ResourceDictionary Source="/XTStyle;component/Themes/TextBlocks.xaml"/>
+        <ResourceDictionary Source="/XTStyle;component/Themes/DataGrids.xaml"/>
+        <ResourceDictionary Source="/XTStyle;component/Themes/ComboBoxes.xaml"/>
+        <ResourceDictionary Source="/XTStyle;component/Themes/Menus.xaml"/>
+        <ResourceDictionary Source="/XTStyle;component/Themes/ToolBars.xaml"/>
+        <ResourceDictionary Source="/XTStyle;component/Themes/StatusBars.xaml"/>
+        <ResourceDictionary Source="/XTStyle;component/Themes/Lists.xaml"/>
+        <ResourceDictionary Source="/XTStyle;component/Themes/Trees.xaml"/>
+        <ResourceDictionary Source="/XTStyle;component/Themes/CheckBoxes.xaml"/>
+        <ResourceDictionary Source="/XTStyle;component/Themes/RadioButtons.xaml"/>
+        <ResourceDictionary Source="/XTStyle;component/Themes/Borders.xaml"/>
+        <ResourceDictionary Source="/XTStyle;component/Themes/Expanders.xaml"/>
+        <ResourceDictionary Source="/XTStyle;component/Themes/GroupBoxs.xaml"/>
+        <ResourceDictionary Source="/XTStyle;component/Themes/ProgressBars.xaml"/>
+        <ResourceDictionary Source="/XTStyle;component/Themes/ScrollBars.xaml"/>
+        <ResourceDictionary Source="/XTStyle;component/Themes/Sliders.xaml"/>
+        <ResourceDictionary Source="/XTStyle;component/Themes/ToolTips.xaml"/>
+        <ResourceDictionary Source="/XTStyle;component/Themes/Misc.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+</ResourceDictionary>
