@@ -136,8 +136,161 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Themes\ControlStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\SearchBoxStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\NumericUpDownStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\ToggleSwitchStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\IconButtonStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\LoadingSpinnerStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\PaginationStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\ToastStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\CardStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\BadgeStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\ModalStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\BreadcrumbStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\EmptyStateStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\StatsCardStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\RippleButtonStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\DateRangePickerStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\FileUploadStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\ThemeSwitcherStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\ProgressTrackerStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\AccordionStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Controls\ClosableTabStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\Accordion.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\Badge.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\Breadcrumb.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\Card.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\ClosableTabControl.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\DateRangePicker.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\EmptyState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\FileUpload.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\FilterableDataGrid.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\IconButton.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\LoadingSpinner.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\ModalDialog.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\NumericUpDown.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\Pagination.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\ProgressTracker.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\RippleButton.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchBox.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\StatsCard.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\ThemeSwitcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\ToastNotification.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\ToggleSwitch.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\Converters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ThemeManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

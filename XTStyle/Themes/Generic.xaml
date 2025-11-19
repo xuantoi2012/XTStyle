@@ -45,6 +45,9 @@
         <ResourceDictionary Source="/XTStyle;component/Themes/Sliders.xaml"/>
         <ResourceDictionary Source="/XTStyle;component/Themes/ToolTips.xaml"/>
         <ResourceDictionary Source="/XTStyle;component/Themes/Misc.xaml"/>
+
+        <!-- Custom Controls -->
+        <ResourceDictionary Source="/XTStyle;component/Themes/ControlStyles.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>
