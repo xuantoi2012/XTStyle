@@ -80,6 +80,14 @@ namespace XTStyle.Controls
         public event RoutedEventHandler Expanded;
         public event RoutedEventHandler Collapsed;
 
+        protected override void OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+            // Toggle expansion when clicking anywhere on the header
+            IsExpanded = !IsExpanded;
+            e.Handled = true;
+        }
+
         private static void OnIsExpandedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var item = (AccordionItem)d;

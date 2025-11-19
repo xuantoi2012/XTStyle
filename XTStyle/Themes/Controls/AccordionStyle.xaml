@@ -34,8 +34,7 @@
                             <Border Grid.Row="0" 
                                   Background="Transparent"
                                   Cursor="Hand"
-                                  Padding="16,12"
-                                  MouseLeftButtonDown="Header_Click">
+                                  Padding="16,12">
                                 <Grid>
                                     <ContentPresenter Content="{TemplateBinding Header}"
                                                     VerticalAlignment="Center">

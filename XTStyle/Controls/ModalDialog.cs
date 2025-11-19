@@ -19,6 +19,27 @@ namespace XTStyle.Controls
             CloseCommand = new RelayCommand(Close);
         }
 
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            // Hook up overlay click handler
+            var overlay = GetTemplateChild("overlay") as System.Windows.FrameworkElement;
+            if (overlay != null)
+            {
+                overlay.MouseLeftButtonDown += Overlay_MouseLeftButtonDown;
+            }
+        }
+
+        private void Overlay_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (CloseOnOverlayClick && e.Source == sender)
+            {
+                Close();
+                e.Handled = true;
+            }
+        }
+
         /// <summary>
         /// Gets or sets whether the modal is open
         /// </summary>

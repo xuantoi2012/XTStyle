@@ -12,8 +12,7 @@
                     <Grid x:Name="root" 
                           Visibility="{TemplateBinding IsOpen, Converter={StaticResource BoolToVisibilityConverter}}">
                         <!-- Overlay -->
-                        <Border x:Name="overlay" Background="#80000000" 
-                              MouseLeftButtonDown="Overlay_MouseDown"/>
+                        <Border x:Name="overlay" Background="#80000000"/>
 
                         <!-- Modal Content -->
                         <Border x:Name="modal"
