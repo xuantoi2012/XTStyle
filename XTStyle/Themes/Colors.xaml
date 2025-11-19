@@ -1,16 +1,37 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <SolidColorBrush x:Key="PrimaryBrush" Color="#FF0063A3"/>
-    <SolidColorBrush x:Key="PrimaryHoverBrush" Color="#FF009AD9"/>
-    <SolidColorBrush x:Key="SecondaryBrush" Color="#10B981"/>
-    <SolidColorBrush x:Key="DangerBrush" Color="#EF4444"/>
-    <SolidColorBrush x:Key="CardBrush" Color="White"/>
-    <SolidColorBrush x:Key="BorderBrush" Color="#E5E7EB"/>
-    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#111827"/>
-    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#6B7280"/>
-    <SolidColorBrush x:Key="BackgroundBrush" Color="#F9FAFB"/>
-    <SolidColorBrush x:Key="AccentBrush" Color="#FF7D29"/>
-    <SolidColorBrush x:Key="AccentHoverBrush" Color="#FFA62F"/>
+    <!-- Primary Colors -->
+    <Color x:Key="Primary">#0063A3</Color>
+    <Color x:Key="PrimaryHover">#009AD9</Color>
+    <Color x:Key="PrimaryPressed">#004E82</Color>
+
+    <!-- Secondary & Status Colors -->
+    <Color x:Key="Secondary">#10B981</Color>
+    <Color x:Key="Danger">#EF4444</Color>
+    <Color x:Key="Warning">#F59E0B</Color>
+    <Color x:Key="Info">#3B82F6</Color>
+    <Color x:Key="Success">#10B981</Color>
+
+    <!-- Background Colors -->
+    <Color x:Key="Background">#F9FAFB</Color>
+    <Color x:Key="BackgroundAlt">#F3F4F6</Color>
+    <Color x:Key="Card">#FFFFFF</Color>
+    <Color x:Key="Border">#E5E7EB</Color>
+    <Color x:Key="Divider">#D1D5DB</Color>
+
+    <!-- Text Colors -->
+    <Color x:Key="TextPrimary">#111827</Color>
+    <Color x:Key="TextSecondary">#6B7280</Color>
+    <Color x:Key="TextDisabled">#9CA3AF</Color>
+    <Color x:Key="TextInverse">#FFFFFF</Color>
+
+    <!-- Accent Colors -->
+    <Color x:Key="Accent">#FF7D29</Color>
+    <Color x:Key="AccentHover">#FFA62F</Color>
+
+    <!-- Overlay -->
+    <Color x:Key="OverlayDark">#80000000</Color>
+    <Color x:Key="OverlayLight">#40FFFFFF</Color>
 
 </ResourceDictionary>

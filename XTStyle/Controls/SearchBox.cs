@@ -1,109 +1,117 @@
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
+using XTStyle.Helpers;
 
 namespace XTStyle.Controls
 {
-    /// <summary>
-    /// A search input control with icon and clear button
-    /// </summary>
-    public class SearchBox : Control
+    public class SearchBox : TextBox
     {
         static SearchBox()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(SearchBox), new FrameworkPropertyMetadata(typeof(SearchBox)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(SearchBox),
+                new FrameworkPropertyMetadata(typeof(SearchBox)));
+
+            CreateDefaultStyle();
         }
 
-        public SearchBox()
+        private static void CreateDefaultStyle()
         {
-            ClearCommand = new RelayCommand(Clear);
+            var style = new Style(typeof(SearchBox), Application.Current.FindResource(typeof(TextBox)) as Style);
+
+            // Basic properties
+            style.Setters.Add(new Setter(HeightProperty, 36.0));
+            style.Setters.Add(new Setter(PaddingProperty, new Thickness(36, 0, 36, 0)));
+            style.Setters.Add(new Setter(VerticalContentAlignmentProperty, VerticalAlignment.Center));
+
+            // Create control template
+            var template = new ControlTemplate(typeof(SearchBox));
+
+            var border = new FrameworkElementFactory(typeof(Border));
+            border.SetValue(Border.BackgroundProperty, Brushes.White);
+            border.SetValue(Border.BorderThicknessProperty, new Thickness(1));
+            border.SetValue(Border.CornerRadiusProperty, new CornerRadius(18));
+            border.SetResourceReference(Border.BorderBrushProperty, "BorderBrush");
+
+            var grid = new FrameworkElementFactory(typeof(Grid));
+
+            // Search icon
+            var icon = new FrameworkElementFactory(typeof(TextBlock));
+            icon.SetValue(TextBlock.TextProperty, "🔍");
+            icon.SetValue(TextBlock.FontSizeProperty, 16.0);
+            icon.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
+            icon.SetValue(TextBlock.HorizontalAlignmentProperty, HorizontalAlignment.Left);
+            icon.SetValue(TextBlock.MarginProperty, new Thickness(12, 0, 0, 0));
+            icon.SetValue(TextBlock.IsHitTestVisibleProperty, false);
+            icon.SetResourceReference(TextBlock.ForegroundProperty, "TextSecondaryBrush");
+
+            // Content host
+            var scrollViewer = new FrameworkElementFactory(typeof(ScrollViewer));
+            scrollViewer.Name = "PART_ContentHost";
+            scrollViewer.SetValue(MarginProperty, new Thickness(36, 0, 36, 0));
+            scrollViewer.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
+
+            grid.AppendChild(icon);
+            grid.AppendChild(scrollViewer);
+
+            border.AppendChild(grid);
+            template.VisualTree = border;
+
+            style.Setters.Add(new Setter(TemplateProperty, template));
+
+            Application.Current.Resources[typeof(SearchBox)] = style;
         }
 
-        /// <summary>
-        /// Gets or sets the search text
-        /// </summary>
-        public string Text
-        {
-            get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
-        }
+        // Placeholder Property
+        public static readonly DependencyProperty PlaceholderProperty =
+            DependencyProperty.Register("Placeholder", typeof(string), typeof(SearchBox),
+                new PropertyMetadata("Search..."));
 
-        public static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register("Text", typeof(string), typeof(SearchBox),
-                new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                    OnTextChanged));
-
-        /// <summary>
-        /// Gets or sets the placeholder text
-        /// </summary>
         public string Placeholder
         {
             get { return (string)GetValue(PlaceholderProperty); }
             set { SetValue(PlaceholderProperty, value); }
         }
 
-        public static readonly DependencyProperty PlaceholderProperty =
-            DependencyProperty.Register("Placeholder", typeof(string), typeof(SearchBox),
-                new PropertyMetadata("Search..."));
+        // HasText property
+        private static readonly DependencyPropertyKey HasTextPropertyKey =
+            DependencyProperty.RegisterReadOnly("HasText", typeof(bool), typeof(SearchBox),
+                new PropertyMetadata(false));
 
-        /// <summary>
-        /// Gets the command to clear the search text
-        /// </summary>
-        public ICommand ClearCommand
-        {
-            get { return (ICommand)GetValue(ClearCommandProperty); }
-            private set { SetValue(ClearCommandProperty, value); }
-        }
+        public static readonly DependencyProperty HasTextProperty = HasTextPropertyKey.DependencyProperty;
 
-        public static readonly DependencyProperty ClearCommandProperty =
-            DependencyProperty.Register("ClearCommand", typeof(ICommand), typeof(SearchBox),
-                new PropertyMetadata(null));
-
-        /// <summary>
-        /// Gets whether the search box has text
-        /// </summary>
         public bool HasText
         {
             get { return (bool)GetValue(HasTextProperty); }
-            private set { SetValue(HasTextProperty, value); }
+            private set { SetValue(HasTextPropertyKey, value); }
         }
 
-        public static readonly DependencyProperty HasTextProperty =
-            DependencyProperty.Register("HasText", typeof(bool), typeof(SearchBox),
-                new PropertyMetadata(false));
-
-        /// <summary>
-        /// Event raised when search text changes
-        /// </summary>
-        public event RoutedPropertyChangedEventHandler<string> TextChanged;
-
-        private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public SearchBox()
         {
-            var searchBox = (SearchBox)d;
-            searchBox.HasText = !string.IsNullOrEmpty((string)e.NewValue);
-            searchBox.TextChanged?.Invoke(searchBox, new RoutedPropertyChangedEventArgs<string>(
-                (string)e.OldValue, (string)e.NewValue));
-        }
-
-        private void Clear()
-        {
-            Text = string.Empty;
-        }
-
-        private class RelayCommand : ICommand
-        {
-            private readonly System.Action _execute;
-
-            public RelayCommand(System.Action execute)
+            // Handle clear on Escape
+            this.KeyDown += (s, e) =>
             {
-                _execute = execute;
-            }
+                if (e.Key == Key.Escape)
+                {
+                    ClearText();
+                    e.Handled = true;
+                }
+            };
+        }
 
-            public event System.EventHandler CanExecuteChanged;
+        private void ClearText()
+        {
+            this.Text = string.Empty;
+            this.Focus();
+        }
 
-            public bool CanExecute(object parameter) => true;
-
-            public void Execute(object parameter) => _execute();
+        protected override void OnTextChanged(TextChangedEventArgs e)
+        {
+            base.OnTextChanged(e);
+            HasText = !string.IsNullOrEmpty(this.Text);
         }
     }
 }

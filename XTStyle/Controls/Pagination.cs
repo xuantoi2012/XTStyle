@@ -1,273 +1,303 @@
-using System;
-using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using XTStyle.Helpers;
 
 namespace XTStyle.Controls
 {
-    /// <summary>
-    /// A complete pagination control with page numbers and navigation
-    /// </summary>
     public class Pagination : Control
     {
         static Pagination()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(Pagination), new FrameworkPropertyMetadata(typeof(Pagination)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(Pagination),
+                new FrameworkPropertyMetadata(typeof(Pagination)));
+
+            CreateDefaultStyle();
         }
 
-        public Pagination()
+        private static void CreateDefaultStyle()
         {
-            FirstPageCommand = new RelayCommand(GoToFirstPage, CanGoToPrevious);
-            PreviousPageCommand = new RelayCommand(GoToPreviousPage, CanGoToPrevious);
-            NextPageCommand = new RelayCommand(GoToNextPage, CanGoToNext);
-            LastPageCommand = new RelayCommand(GoToLastPage, CanGoToNext);
-            PageNumbers = new ObservableCollection<PageNumberItem>();
-            UpdatePageNumbers();
+            var style = new Style(typeof(Pagination));
+            style.Setters.Add(new Setter(HeightProperty, 40.0));
+            style.Setters.Add(new Setter(HorizontalAlignmentProperty, HorizontalAlignment.Stretch));
+
+            // Create template
+            var template = new ControlTemplate(typeof(Pagination));
+
+            var border = new FrameworkElementFactory(typeof(Border));
+            border.SetValue(Border.BackgroundProperty, Brushes.White);
+            border.SetValue(Border.BorderThicknessProperty, new Thickness(1));
+            border.SetValue(Border.CornerRadiusProperty, new CornerRadius(6));
+            border.SetValue(Border.PaddingProperty, new Thickness(12, 8, 12, 8));
+            border.SetResourceReference(Border.BorderBrushProperty, "BorderBrush");
+
+            var grid = new FrameworkElementFactory(typeof(Grid));
+
+            // Column definitions
+            var col1 = new FrameworkElementFactory(typeof(ColumnDefinition));
+            col1.SetValue(ColumnDefinition.WidthProperty, GridLength.Auto);
+            var col2 = new FrameworkElementFactory(typeof(ColumnDefinition));
+            col2.SetValue(ColumnDefinition.WidthProperty, new GridLength(1, GridUnitType.Star));
+            var col3 = new FrameworkElementFactory(typeof(ColumnDefinition));
+            col3.SetValue(ColumnDefinition.WidthProperty, GridLength.Auto);
+
+            grid.AppendChild(col1);
+            grid.AppendChild(col2);
+            grid.AppendChild(col3);
+
+            // Info text
+            var infoText = new FrameworkElementFactory(typeof(TextBlock));
+            infoText.SetValue(Grid.ColumnProperty, 0);
+            infoText.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center);
+            infoText.SetValue(TextBlock.MarginProperty, new Thickness(0, 0, 16, 0));
+            infoText.SetValue(TextBlock.TextProperty, "Pagination info");
+
+            grid.AppendChild(infoText);
+
+            // Center panel (will be populated in code)
+            var centerPanel = new FrameworkElementFactory(typeof(StackPanel));
+            centerPanel.SetValue(Grid.ColumnProperty, 1);
+            centerPanel.SetValue(StackPanel.OrientationProperty, Orientation.Horizontal);
+            centerPanel.SetValue(StackPanel.HorizontalAlignmentProperty, HorizontalAlignment.Center);
+            centerPanel.Name = "PART_ButtonPanel";
+
+            grid.AppendChild(centerPanel);
+
+            border.AppendChild(grid);
+            template.VisualTree = border;
+
+            style.Setters.Add(new Setter(TemplateProperty, template));
+
+            Application.Current.Resources[typeof(Pagination)] = style;
         }
 
-        /// <summary>
-        /// Gets or sets the total number of items
-        /// </summary>
+        // TotalItems Property
+        public static readonly DependencyProperty TotalItemsProperty =
+            DependencyProperty.Register("TotalItems", typeof(int), typeof(Pagination),
+                new PropertyMetadata(0, OnPaginationChanged));
+
         public int TotalItems
         {
             get { return (int)GetValue(TotalItemsProperty); }
             set { SetValue(TotalItemsProperty, value); }
         }
 
-        public static readonly DependencyProperty TotalItemsProperty =
-            DependencyProperty.Register("TotalItems", typeof(int), typeof(Pagination),
-                new PropertyMetadata(0, OnPaginationPropertyChanged));
+        // PageSize Property
+        public static readonly DependencyProperty PageSizeProperty =
+            DependencyProperty.Register("PageSize", typeof(int), typeof(Pagination),
+                new PropertyMetadata(20, OnPaginationChanged));
 
-        /// <summary>
-        /// Gets or sets the current page (1-based)
-        /// </summary>
-        public int CurrentPage
-        {
-            get { return (int)GetValue(CurrentPageProperty); }
-            set { SetValue(CurrentPageProperty, value); }
-        }
-
-        public static readonly DependencyProperty CurrentPageProperty =
-            DependencyProperty.Register("CurrentPage", typeof(int), typeof(Pagination),
-                new FrameworkPropertyMetadata(1, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                    OnCurrentPageChanged, CoerceCurrentPage));
-
-        /// <summary>
-        /// Gets or sets the page size
-        /// </summary>
         public int PageSize
         {
             get { return (int)GetValue(PageSizeProperty); }
             set { SetValue(PageSizeProperty, value); }
         }
 
-        public static readonly DependencyProperty PageSizeProperty =
-            DependencyProperty.Register("PageSize", typeof(int), typeof(Pagination),
-                new PropertyMetadata(10, OnPaginationPropertyChanged));
+        // CurrentPage Property
+        public static readonly DependencyProperty CurrentPageProperty =
+            DependencyProperty.Register("CurrentPage", typeof(int), typeof(Pagination),
+                new FrameworkPropertyMetadata(1, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnCurrentPageChanged));
 
-        /// <summary>
-        /// Gets the total number of pages
-        /// </summary>
+        public int CurrentPage
+        {
+            get { return (int)GetValue(CurrentPageProperty); }
+            set { SetValue(CurrentPageProperty, value); }
+        }
+
+        // TotalPages Property
+        private static readonly DependencyPropertyKey TotalPagesPropertyKey =
+            DependencyProperty.RegisterReadOnly("TotalPages", typeof(int), typeof(Pagination),
+                new PropertyMetadata(0));
+
+        public static readonly DependencyProperty TotalPagesProperty = TotalPagesPropertyKey.DependencyProperty;
+
         public int TotalPages
         {
             get { return (int)GetValue(TotalPagesProperty); }
-            private set { SetValue(TotalPagesProperty, value); }
+            private set { SetValue(TotalPagesPropertyKey, value); }
         }
 
-        public static readonly DependencyProperty TotalPagesProperty =
-            DependencyProperty.Register("TotalPages", typeof(int), typeof(Pagination),
-                new PropertyMetadata(1));
+        private StackPanel _buttonPanel;
 
-        /// <summary>
-        /// Gets the page numbers to display
-        /// </summary>
-        public ObservableCollection<PageNumberItem> PageNumbers
+        public Pagination()
         {
-            get { return (ObservableCollection<PageNumberItem>)GetValue(PageNumbersProperty); }
-            private set { SetValue(PageNumbersProperty, value); }
+            this.Loaded += Pagination_Loaded;
         }
 
-        public static readonly DependencyProperty PageNumbersProperty =
-            DependencyProperty.Register("PageNumbers", typeof(ObservableCollection<PageNumberItem>), typeof(Pagination));
-
-        /// <summary>
-        /// Gets the first page command
-        /// </summary>
-        public ICommand FirstPageCommand
+        private void Pagination_Loaded(object sender, RoutedEventArgs e)
         {
-            get { return (ICommand)GetValue(FirstPageCommandProperty); }
-            private set { SetValue(FirstPageCommandProperty, value); }
+            UpdatePagination();
         }
 
-        public static readonly DependencyProperty FirstPageCommandProperty =
-            DependencyProperty.Register("FirstPageCommand", typeof(ICommand), typeof(Pagination));
-
-        /// <summary>
-        /// Gets the previous page command
-        /// </summary>
-        public ICommand PreviousPageCommand
+        public override void OnApplyTemplate()
         {
-            get { return (ICommand)GetValue(PreviousPageCommandProperty); }
-            private set { SetValue(PreviousPageCommandProperty, value); }
+            base.OnApplyTemplate();
+            _buttonPanel = GetTemplateChild("PART_ButtonPanel") as StackPanel;
+            UpdatePagination();
         }
 
-        public static readonly DependencyProperty PreviousPageCommandProperty =
-            DependencyProperty.Register("PreviousPageCommand", typeof(ICommand), typeof(Pagination));
-
-        /// <summary>
-        /// Gets the next page command
-        /// </summary>
-        public ICommand NextPageCommand
-        {
-            get { return (ICommand)GetValue(NextPageCommandProperty); }
-            private set { SetValue(NextPageCommandProperty, value); }
-        }
-
-        public static readonly DependencyProperty NextPageCommandProperty =
-            DependencyProperty.Register("NextPageCommand", typeof(ICommand), typeof(Pagination));
-
-        /// <summary>
-        /// Gets the last page command
-        /// </summary>
-        public ICommand LastPageCommand
-        {
-            get { return (ICommand)GetValue(LastPageCommandProperty); }
-            private set { SetValue(LastPageCommandProperty, value); }
-        }
-
-        public static readonly DependencyProperty LastPageCommandProperty =
-            DependencyProperty.Register("LastPageCommand", typeof(ICommand), typeof(Pagination));
-
-        /// <summary>
-        /// Event raised when the page changes
-        /// </summary>
-        public event RoutedPropertyChangedEventHandler<int> PageChanged;
-
-        private static void OnPaginationPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnPaginationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var pagination = (Pagination)d;
-            pagination.UpdateTotalPages();
-            pagination.UpdatePageNumbers();
-            CommandManager.InvalidateRequerySuggested();
+            pagination.UpdatePagination();
         }
 
         private static void OnCurrentPageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var pagination = (Pagination)d;
-            pagination.UpdatePageNumbers();
-            pagination.PageChanged?.Invoke(pagination, new RoutedPropertyChangedEventArgs<int>(
-                (int)e.OldValue, (int)e.NewValue));
-            CommandManager.InvalidateRequerySuggested();
+            pagination.UpdatePagination();
         }
 
-        private static object CoerceCurrentPage(DependencyObject d, object baseValue)
+        private void UpdatePagination()
         {
-            var pagination = (Pagination)d;
-            var value = (int)baseValue;
-            return Math.Max(1, Math.Min(pagination.TotalPages, value));
+            if (PageSize <= 0) return;
+
+            TotalPages = (int)Math.Ceiling((double)TotalItems / PageSize);
+
+            if (CurrentPage < 1) CurrentPage = 1;
+            if (CurrentPage > TotalPages && TotalPages > 0) CurrentPage = TotalPages;
+
+            UpdateButtons();
         }
 
-        private void UpdateTotalPages()
+        private void UpdateButtons()
         {
-            TotalPages = PageSize > 0 ? (int)Math.Ceiling((double)TotalItems / PageSize) : 1;
-            CoerceValue(CurrentPageProperty);
-        }
+            if (_buttonPanel == null) return;
 
-        private void UpdatePageNumbers()
-        {
-            PageNumbers.Clear();
+            _buttonPanel.Children.Clear();
 
-            if (TotalPages <= 1)
-                return;
+            // First button
+            var firstBtn = CreateNavigationButton("⏮", () => CurrentPage = 1, CurrentPage > 1);
+            _buttonPanel.Children.Add(firstBtn);
 
-            const int maxVisible = 7;
-            int startPage = 1;
-            int endPage = TotalPages;
+            // Previous button
+            var prevBtn = CreateNavigationButton("◀", () => CurrentPage--, CurrentPage > 1);
+            _buttonPanel.Children.Add(prevBtn);
 
-            if (TotalPages > maxVisible)
+            // Page numbers
+            var pageNumbers = GeneratePageNumbers();
+            foreach (var pageNum in pageNumbers)
             {
-                int middle = maxVisible / 2;
-                if (CurrentPage <= middle)
+                if (pageNum.IsEllipsis)
                 {
-                    endPage = maxVisible - 1;
-                }
-                else if (CurrentPage >= TotalPages - middle)
-                {
-                    startPage = TotalPages - maxVisible + 2;
+                    var ellipsis = new TextBlock
+                    {
+                        Text = "...",
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Margin = new Thickness(4, 0, 4, 0)
+                    };
+                    _buttonPanel.Children.Add(ellipsis);
                 }
                 else
                 {
-                    startPage = CurrentPage - middle + 1;
-                    endPage = CurrentPage + middle - 1;
+                    var pageBtn = CreatePageButton(pageNum.Page, pageNum.Page == CurrentPage);
+                    _buttonPanel.Children.Add(pageBtn);
                 }
             }
 
-            // Add first page
-            if (startPage > 1)
-            {
-                PageNumbers.Add(new PageNumberItem { PageNumber = 1, IsEllipsis = false });
-                if (startPage > 2)
-                    PageNumbers.Add(new PageNumberItem { PageNumber = -1, IsEllipsis = true });
-            }
+            // Next button
+            var nextBtn = CreateNavigationButton("▶", () => CurrentPage++, CurrentPage < TotalPages);
+            _buttonPanel.Children.Add(nextBtn);
 
-            // Add middle pages
-            for (int i = startPage; i <= endPage; i++)
-            {
-                PageNumbers.Add(new PageNumberItem { PageNumber = i, IsEllipsis = false });
-            }
-
-            // Add last page
-            if (endPage < TotalPages)
-            {
-                if (endPage < TotalPages - 1)
-                    PageNumbers.Add(new PageNumberItem { PageNumber = -1, IsEllipsis = true });
-                PageNumbers.Add(new PageNumberItem { PageNumber = TotalPages, IsEllipsis = false });
-            }
+            // Last button
+            var lastBtn = CreateNavigationButton("⏭", () => CurrentPage = TotalPages, CurrentPage < TotalPages);
+            _buttonPanel.Children.Add(lastBtn);
         }
 
-        private void GoToFirstPage() => CurrentPage = 1;
-        private void GoToPreviousPage() => CurrentPage--;
-        private void GoToNextPage() => CurrentPage++;
-        private void GoToLastPage() => CurrentPage = TotalPages;
-
-        private bool CanGoToPrevious() => CurrentPage > 1;
-        private bool CanGoToNext() => CurrentPage < TotalPages;
-
-        internal void GoToPage(int pageNumber)
+        private Button CreateNavigationButton(string content, Action action, bool isEnabled)
         {
-            if (pageNumber > 0 && pageNumber <= TotalPages)
-                CurrentPage = pageNumber;
+            var btn = new Button
+            {
+                Content = content,
+                Width = 32,
+                Height = 32,
+                Margin = new Thickness(2),
+                IsEnabled = isEnabled,
+                Cursor = Cursors.Hand
+            };
+
+            btn.Click += (s, e) => action();
+
+            return btn;
         }
 
-        private class RelayCommand : ICommand
+        private Button CreatePageButton(int pageNumber, bool isCurrent)
         {
-            private readonly Action _execute;
-            private readonly Func<bool> _canExecute;
-
-            public RelayCommand(Action execute, Func<bool> canExecute = null)
+            var btn = new Button
             {
-                _execute = execute;
-                _canExecute = canExecute;
+                Content = pageNumber.ToString(),
+                Width = 32,
+                Height = 32,
+                Margin = new Thickness(2),
+                Cursor = Cursors.Hand,
+                FontWeight = isCurrent ? FontWeights.Bold : FontWeights.Normal
+            };
+
+            if (isCurrent)
+            {
+                btn.Background = Application.Current.TryFindResource("PrimaryBrush") as Brush ?? Brushes.Blue;
+                btn.Foreground = Brushes.White;
             }
 
-            public event EventHandler CanExecuteChanged
+            btn.Click += (s, e) => CurrentPage = pageNumber;
+
+            return btn;
+        }
+
+        private List<PageNumberItem> GeneratePageNumbers()
+        {
+            var pageNumbers = new List<PageNumberItem>();
+
+            if (TotalPages <= 7)
             {
-                add { CommandManager.RequerySuggested += value; }
-                remove { CommandManager.RequerySuggested -= value; }
+                for (int i = 1; i <= TotalPages; i++)
+                {
+                    pageNumbers.Add(new PageNumberItem { Page = i, IsEllipsis = false });
+                }
+            }
+            else
+            {
+                pageNumbers.Add(new PageNumberItem { Page = 1, IsEllipsis = false });
+
+                if (CurrentPage <= 4)
+                {
+                    for (int i = 2; i <= 5; i++)
+                    {
+                        pageNumbers.Add(new PageNumberItem { Page = i, IsEllipsis = false });
+                    }
+                    pageNumbers.Add(new PageNumberItem { Page = 0, IsEllipsis = true });
+                }
+                else if (CurrentPage >= TotalPages - 3)
+                {
+                    pageNumbers.Add(new PageNumberItem { Page = 0, IsEllipsis = true });
+                    for (int i = TotalPages - 4; i < TotalPages; i++)
+                    {
+                        pageNumbers.Add(new PageNumberItem { Page = i, IsEllipsis = false });
+                    }
+                }
+                else
+                {
+                    pageNumbers.Add(new PageNumberItem { Page = 0, IsEllipsis = true });
+                    for (int i = CurrentPage - 1; i <= CurrentPage + 1; i++)
+                    {
+                        pageNumbers.Add(new PageNumberItem { Page = i, IsEllipsis = false });
+                    }
+                    pageNumbers.Add(new PageNumberItem { Page = 0, IsEllipsis = true });
+                }
+
+                pageNumbers.Add(new PageNumberItem { Page = TotalPages, IsEllipsis = false });
             }
 
-            public bool CanExecute(object parameter) => _canExecute?.Invoke() ?? true;
-            public void Execute(object parameter) => _execute();
+            return pageNumbers;
         }
     }
 
-    /// <summary>
-    /// Represents a page number item in the pagination control
-    /// </summary>
     public class PageNumberItem
     {
-        public int PageNumber { get; set; }
+        public int Page { get; set; }
         public bool IsEllipsis { get; set; }
     }
 }

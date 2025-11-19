@@ -1,88 +1,50 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using XTStyle.Themes; // ⭐ QUAN TRỌNG - THÊM DÒNG NÀY
 
 namespace XTStyle.Controls
 {
-    /// <summary>
-    /// A control to switch between Light and Dark themes
-    /// </summary>
-    public class ThemeSwitcher : Control
+    public class ThemeSwitcher : ToggleButton
     {
         static ThemeSwitcher()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(ThemeSwitcher), new FrameworkPropertyMetadata(typeof(ThemeSwitcher)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(ThemeSwitcher),
+                new FrameworkPropertyMetadata(typeof(ThemeSwitcher)));
         }
 
-        public ThemeSwitcher()
-        {
-            ToggleThemeCommand = new RelayCommand(ToggleTheme);
-            
-            // Subscribe to theme manager changes
-            ThemeManager.Instance.ThemeChanged += OnThemeManagerChanged;
-            IsDarkMode = ThemeManager.Instance.CurrentTheme == ThemeType.Dark;
-        }
+        // IsDarkMode Property
+        public static readonly DependencyProperty IsDarkModeProperty =
+            DependencyProperty.Register("IsDarkMode", typeof(bool), typeof(ThemeSwitcher),
+                new PropertyMetadata(false, OnIsDarkModeChanged));
 
-        /// <summary>
-        /// Gets or sets whether dark mode is enabled
-        /// </summary>
         public bool IsDarkMode
         {
             get { return (bool)GetValue(IsDarkModeProperty); }
             set { SetValue(IsDarkModeProperty, value); }
         }
 
-        public static readonly DependencyProperty IsDarkModeProperty =
-            DependencyProperty.Register("IsDarkMode", typeof(bool), typeof(ThemeSwitcher),
-                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                    OnIsDarkModeChanged));
-
-        /// <summary>
-        /// Gets the toggle theme command
-        /// </summary>
-        public ICommand ToggleThemeCommand
+        public ThemeSwitcher()
         {
-            get { return (ICommand)GetValue(ToggleThemeCommandProperty); }
-            private set { SetValue(ToggleThemeCommandProperty, value); }
-        }
+            // Load current theme state
+            IsDarkMode = ThemeManager.Instance.CurrentTheme == ThemeMode.Dark;
 
-        public static readonly DependencyProperty ToggleThemeCommandProperty =
-            DependencyProperty.Register("ToggleThemeCommand", typeof(ICommand), typeof(ThemeSwitcher));
+            // Listen to IsChecked changes
+            this.Checked += (s, e) => IsDarkMode = true;
+            this.Unchecked += (s, e) => IsDarkMode = false;
+        }
 
         private static void OnIsDarkModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var switcher = (ThemeSwitcher)d;
             var isDark = (bool)e.NewValue;
-            
-            // Update theme manager
-            ThemeManager.Instance.SetTheme(isDark ? ThemeType.Dark : ThemeType.Light);
-        }
 
-        private void OnThemeManagerChanged(object sender, ThemeType theme)
-        {
-            // Update control when theme changes externally
-            IsDarkMode = theme == ThemeType.Dark;
-        }
+            // Update theme
+            ThemeManager.Instance.CurrentTheme = isDark ? ThemeMode.Dark : ThemeMode.Light;
 
-        private void ToggleTheme()
-        {
-            IsDarkMode = !IsDarkMode;
-        }
-
-        private class RelayCommand : ICommand
-        {
-            private readonly System.Action _execute;
-
-            public RelayCommand(System.Action execute)
-            {
-                _execute = execute;
-            }
-
-            public event System.EventHandler CanExecuteChanged;
-
-            public bool CanExecute(object parameter) => true;
-
-            public void Execute(object parameter) => _execute();
+            // Update IsChecked to match
+            switcher.IsChecked = isDark;
         }
     }
 }
