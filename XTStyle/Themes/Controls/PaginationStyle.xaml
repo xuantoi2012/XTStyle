@@ -1,0 +1,163 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:XTStyle.Controls">
+
+    <Style TargetType="{x:Type local:Pagination}">
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:Pagination}">
+                    <Border Background="{StaticResource CardBrush}"
+                            BorderBrush="{StaticResource BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Navigation Buttons (Left) -->
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,12,0">
+                                <!-- First Page -->
+                                <Button Command="{TemplateBinding FirstPageCommand}"
+                                      Style="{StaticResource PaginationButtonStyle}"
+                                      Content="⏮" ToolTip="First Page"/>
+
+                                <!-- Previous Page -->
+                                <Button Command="{TemplateBinding PreviousPageCommand}"
+                                      Style="{StaticResource PaginationButtonStyle}"
+                                      Content="◀" ToolTip="Previous Page"
+                                      Margin="4,0,0,0"/>
+                            </StackPanel>
+
+                            <!-- Page Numbers (Center) -->
+                            <ItemsControl Grid.Column="1" 
+                                        ItemsSource="{TemplateBinding PageNumbers}"
+                                        HorizontalAlignment="Center">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Margin="2,0"
+                                              Style="{StaticResource PageNumberButtonStyle}">
+                                            <Button.Content>
+                                                <TextBlock>
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Text" Value="{Binding PageNumber}"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsEllipsis}" Value="True">
+                                                                    <Setter Property="Text" Value="..."/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </Button.Content>
+                                            <Button.Command>
+                                                <Binding RelativeSource="{RelativeSource AncestorType=local:Pagination}" 
+                                                       Path="DataContext" 
+                                                       Converter="{StaticResource GoToPageCommandConverter}"/>
+                                            </Button.Command>
+                                            <Button.CommandParameter>
+                                                <Binding Path="PageNumber"/>
+                                            </Button.CommandParameter>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- Navigation Buttons (Right) -->
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="12,0,0,0">
+                                <!-- Next Page -->
+                                <Button Command="{TemplateBinding NextPageCommand}"
+                                      Style="{StaticResource PaginationButtonStyle}"
+                                      Content="▶" ToolTip="Next Page"/>
+
+                                <!-- Last Page -->
+                                <Button Command="{TemplateBinding LastPageCommand}"
+                                      Style="{StaticResource PaginationButtonStyle}"
+                                      Content="⏭" ToolTip="Last Page"
+                                      Margin="4,0,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Pagination Button Style -->
+    <Style x:Key="PaginationButtonStyle" TargetType="Button">
+        <Setter Property="Width" Value="32"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="4">
+                        <ContentPresenter HorizontalAlignment="Center" 
+                                        VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource BorderBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.4"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Page Number Button Style -->
+    <Style x:Key="PageNumberButtonStyle" TargetType="Button">
+        <Setter Property="MinWidth" Value="32"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Padding" Value="8,0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" 
+                                        VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource BorderBrush}"/>
+                        </Trigger>
+                        <DataTrigger Binding="{Binding IsEllipsis}" Value="True">
+                            <Setter Property="Cursor" Value="Arrow"/>
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
