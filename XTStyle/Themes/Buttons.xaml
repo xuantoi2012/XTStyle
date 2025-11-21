@@ -64,40 +64,40 @@
 
     <!-- Success Button -->
     <Style x:Key="SuccessButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
-        <Setter Property="Background" Value="{StaticResource SuccessBrush}"/>
+        <Setter Property="Background" Value="#059669"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#059669"/>
+                <Setter Property="Background" Value="{StaticResource SuccessBrush}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
 
     <!-- Danger Button -->
     <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
-        <Setter Property="Background" Value="{StaticResource DangerBrush}"/>
+        <Setter Property="Background" Value="#DC2626"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#DC2626"/>
+                <Setter Property="Background" Value="{StaticResource DangerBrush}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
 
     <!-- Warning Button -->
     <Style x:Key="WarningButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
-        <Setter Property="Background" Value="{StaticResource WarningBrush}"/>
+        <Setter Property="Background" Value="#D97706"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#D97706"/>
+                <Setter Property="Background" Value="{StaticResource WarningBrush}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
 
     <!-- Info Button -->
     <Style x:Key="InfoButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
-        <Setter Property="Background" Value="{StaticResource InfoBrush}"/>
+        <Setter Property="Background" Value="#2563EB"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#2563EB"/>
+                <Setter Property="Background" Value="{StaticResource InfoBrush}"/>
             </Trigger>
         </Style.Triggers>
     </Style>

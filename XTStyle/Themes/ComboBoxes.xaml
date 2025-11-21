@@ -56,7 +56,7 @@
                                         </Trigger>
                                         <Trigger Property="IsChecked" Value="True">
                                             <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
-                                            <Setter TargetName="Border" Property="BorderThickness" Value="2"/>
+                                            <Setter TargetName="Border" Property="BorderThickness" Value="1"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
