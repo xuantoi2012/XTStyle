@@ -43,6 +43,61 @@
         </Setter>
     </Style>
 
+    <!-- ✅ TextBox với Placeholder (dùng Tag để set placeholder) -->
+    <Style x:Key="ModernTextBoxWithPlaceholder" TargetType="TextBox" BasedOn="{StaticResource ModernTextBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Grid>
+                        <Border x:Name="Border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+
+                        <!-- Placeholder Text -->
+                        <TextBlock x:Name="PlaceholderText"
+                                   Text="{TemplateBinding Tag}"
+                                   Foreground="#9CA3AF"
+                                   FontSize="11"
+                                   FontFamily="{TemplateBinding FontFamily}"
+                                   IsHitTestVisible="False"
+                                   Margin="12,0,0,0"
+                                   VerticalAlignment="Center"
+                                   Visibility="Collapsed"/>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <!-- Show placeholder when text is empty -->
+                        <Trigger Property="Text" Value="">
+                            <Setter TargetName="PlaceholderText" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="Text" Value="{x:Null}">
+                            <Setter TargetName="PlaceholderText" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+
+                        <!-- Focus effect -->
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                            <Setter TargetName="Border" Property="BorderThickness" Value="1"/>
+                        </Trigger>
+
+                        <!-- Disabled state -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="{StaticResource BackgroundAltBrush}"/>
+                            <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}"/>
+                            <Setter TargetName="PlaceholderText" Property="Foreground" Value="{StaticResource TextDisabledBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- Multiline TextBox -->
     <Style x:Key="MultilineTextBox" TargetType="TextBox" BasedOn="{StaticResource ModernTextBox}">
         <Setter Property="AcceptsReturn" Value="True"/>

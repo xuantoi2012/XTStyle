@@ -15,6 +15,7 @@
         <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource BorderBrush}"/>
         <Setter Property="VerticalGridLinesBrush" Value="{StaticResource BorderBrush}"/>
         <Setter Property="RowHeight" Value="35"/>
+        <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="AutoGenerateColumns" Value="False"/>
         <Setter Property="CanUserAddRows" Value="False"/>
         <Setter Property="CanUserDeleteRows" Value="False"/>
@@ -30,7 +31,8 @@
                     <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
                     <Setter Property="FontWeight" Value="SemiBold"/>
                     <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}"/>
-                    <Setter Property="Padding" Value="12,10"/>
+                    <Setter Property="Padding" Value="12,8"/>
+                    <Setter Property="Height" Value="35"/>
                     <Setter Property="BorderThickness" Value="1"/>
                     <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
                     <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -91,6 +93,158 @@
                         </Trigger>
                     </Style.Triggers>
                 </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ✅ Modern ComboBox for DataGrid (Full cell, no padding) -->
+    <Style x:Key="DataGridComboBox" TargetType="ComboBox">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="20"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Border cho toàn bộ ComboBox -->
+                        <Border x:Name="BorderElement"
+                            Grid.ColumnSpan="2"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"/>
+
+                        <!-- Content hiển thị -->
+                        <ContentPresenter x:Name="ContentSite"
+                                      Grid.Column="0"
+                                      IsHitTestVisible="False"
+                                      Content="{TemplateBinding SelectionBoxItem}"
+                                      ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                      ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                      Margin="12,0,0,0"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Left"/>
+
+                        <!-- Toggle Button (Arrow) -->
+                        <ToggleButton x:Name="ToggleButton"
+                                  Grid.Column="1"
+                                  Focusable="false"
+                                  IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                  ClickMode="Press"
+                                  Background="Transparent"
+                                  BorderThickness="0">
+                            <ToggleButton.Template>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border Background="Transparent" Padding="0">
+                                        <Path x:Name="Arrow"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Data="M 0 0 L 4 4 L 8 0 Z"
+                                          Fill="#6B7280"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Arrow" Property="Fill" Value="{StaticResource PrimaryBrush}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                        </ToggleButton>
+
+                        <!-- Dropdown Popup -->
+                        <Popup x:Name="Popup"
+                           Placement="Bottom"
+                           IsOpen="{TemplateBinding IsDropDownOpen}"
+                           AllowsTransparency="True"
+                           Focusable="False"
+                           PopupAnimation="Slide">
+                            <Grid x:Name="DropDown"
+                              SnapsToDevicePixels="True"
+                              MinWidth="{TemplateBinding ActualWidth}"
+                              MaxHeight="250">
+                                <Border x:Name="DropDownBorder"
+                                    Background="White"
+                                    BorderThickness="1"
+                                    BorderBrush="#D1D5DB"
+                                    CornerRadius="4"
+                                    Margin="0,2,0,0">
+                                    <Border.Effect>
+                                        <DropShadowEffect Color="Black" Opacity="0.15" BlurRadius="10" ShadowDepth="2"/>
+                                    </Border.Effect>
+                                    <ScrollViewer Margin="0" 
+                                              SnapsToDevicePixels="True"
+                                              VerticalScrollBarVisibility="Auto">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Grid>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <!-- Hover effect - hiện border nhẹ -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="BorderElement" Property="Background" Value="#F9FAFB"/>
+                        </Trigger>
+                        <!-- Focus effect -->
+                        <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                            <Setter TargetName="BorderElement" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                            <Setter TargetName="BorderElement" Property="BorderThickness" Value="1"/>
+                            <Setter TargetName="BorderElement" Property="Background" Value="White"/>
+                        </Trigger>
+                        <!-- Dropdown open effect -->
+                        <Trigger Property="IsDropDownOpen" Value="True">
+                            <Setter TargetName="BorderElement" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                            <Setter TargetName="BorderElement" Property="BorderThickness" Value="1"/>
+                            <Setter TargetName="BorderElement" Property="Background" Value="White"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ✅ ComboBox Item Style (Compact padding) -->
+    <Style TargetType="ComboBoxItem">
+        <Setter Property="Padding" Value="12,6"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBoxItem">
+                    <Border x:Name="Border"
+                        Background="{TemplateBinding Background}"
+                        Padding="{TemplateBinding Padding}"
+                        Margin="0">
+                        <ContentPresenter VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <!-- Hover effect -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="#F3F4F6"/>
+                        </Trigger>
+                        <!-- Selected effect (highlighted như DevExpress) -->
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="#3B82F6"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                        <!-- Current selection -->
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="#DBEAFE"/>
+                            <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
