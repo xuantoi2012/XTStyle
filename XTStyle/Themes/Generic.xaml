@@ -22,9 +22,6 @@
         <ResourceDictionary Source="pack://application:,,,/XTStyle;component/Themes/ScrollBars.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/XTStyle;component/Themes/Cards.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/XTStyle;component/Themes/DatePickers.xaml"/>
-        
-        <!-- 4. Custom Controls -->
-        <ResourceDictionary Source="pack://application:,,,/XTStyle;component/Themes/CustomControls.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

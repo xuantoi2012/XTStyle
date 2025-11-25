@@ -72,10 +72,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Themes\CustomControls.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Themes\DataGrids.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -110,73 +106,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\Accordion.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\Badge.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\Breadcrumb.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\Card.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\ClosableTabControl.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\DateRangePicker.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\EmptyState.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\FileUpload.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\FilterableDataGrid.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\IconButton.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\LoadingSpinner.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\ModalDialog.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\NumericUpDown.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\Pagination.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\ProgressTracker.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\RippleButton.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\SearchBox.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\StatsCard.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\ThemeSwitcher.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\ToastNotification.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\ToggleSwitch.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Converters\Converters.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="Themes\ThemeManager.cs">
       <SubType>Code</SubType>
     </Compile>
