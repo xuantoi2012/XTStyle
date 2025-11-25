@@ -23,6 +23,11 @@ namespace XTStyle.Helpers
             remove { CommandManager.RequerySuggested -= value; }
         }
 
+        public void RaiseCanExecuteChanged()
+        {
+            CommandManager.InvalidateRequerySuggested();
+        }
+
         public bool CanExecute(object parameter)
         {
             return _canExecute == null || _canExecute();
@@ -52,6 +57,11 @@ namespace XTStyle.Helpers
         {
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
+        }
+
+        public void RaiseCanExecuteChanged()
+        {
+            CommandManager.InvalidateRequerySuggested();
         }
 
         public bool CanExecute(object parameter)
