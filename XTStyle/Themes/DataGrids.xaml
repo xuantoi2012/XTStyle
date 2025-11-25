@@ -29,8 +29,8 @@
         <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="GridLinesVisibility" Value="All"/>
-        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource BorderBrush}"/>
-        <Setter Property="VerticalGridLinesBrush" Value="{StaticResource BorderBrush}"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource DividerBrush}"/>
+        <Setter Property="VerticalGridLinesBrush" Value="{StaticResource DividerBrush}"/>
         <Setter Property="RowHeight" Value="35"/>
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="AutoGenerateColumns" Value="False"/>
@@ -44,13 +44,13 @@
         <Setter Property="ColumnHeaderStyle">
             <Setter.Value>
                 <Style TargetType="DataGridColumnHeader">
-                    <Setter Property="Background" Value="{StaticResource BackgroundAltBrush}"/>
+                    <Setter Property="Background" Value="AliceBlue"/>
                     <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
                     <Setter Property="FontWeight" Value="SemiBold"/>
                     <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}"/>
                     <Setter Property="Padding" Value="12,8"/>
                     <Setter Property="Height" Value="35"/>
-                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="BorderThickness" Value="1,0,0,1"/>
                     <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
                     <Setter Property="HorizontalContentAlignment" Value="Center"/>
                     <Setter Property="Template">
@@ -311,7 +311,7 @@
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="Border" Property="Background" Value="#DBEAFE"/>
-                            <Setter Property="Foreground" Value="{StaticResource PrimaryHoverBrush}"/>
+                            <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
                             <Setter Property="FontWeight" Value="SemiBold"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
