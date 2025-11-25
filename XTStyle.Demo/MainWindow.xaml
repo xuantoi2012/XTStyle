@@ -1,0 +1,436 @@
+<Window x:Class="XTStyle.Demo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:XTStyle.Controls;assembly=XTStyle"
+        xmlns:vm="clr-namespace:XTStyle.Demo.ViewModels"
+        Title="XTStyle Controls Demo" 
+        Height="900" 
+        Width="1400"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BackgroundBrush}">
+    
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Toast Notification Container -->
+        <ItemsControl x:Name="ToastContainer" 
+                      Grid.Row="0"
+                      Grid.RowSpan="2"
+                      VerticalAlignment="Top" 
+                      HorizontalAlignment="Right"
+                      Margin="20"
+                      Panel.ZIndex="1000"/>
+
+        <!-- Header -->
+        <Border Grid.Row="0" 
+                Background="{StaticResource CardBrush}" 
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <TextBlock Text="🎨 XTStyle Controls Demo" 
+                               FontSize="24" 
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               VerticalAlignment="Center"/>
+                    <local:Badge Text="v1.0" 
+                                Type="Primary" 
+                                Margin="15,0,0,0"
+                                VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Theme Switcher -->
+                <local:ThemeSwitcher Grid.Column="1" 
+                                    IsDarkMode="{Binding IsDarkMode}"
+                                    VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <ScrollViewer Grid.Row="1" 
+                      VerticalScrollBarVisibility="Auto"
+                      Padding="20">
+            <StackPanel>
+                
+                <!-- Breadcrumb Navigation -->
+                <local:Breadcrumb x:Name="BreadcrumbControl" 
+                                 Separator="/"
+                                 Margin="0,0,0,20"/>
+
+                <!-- Search and Filters Section -->
+                <local:Card IsHoverable="False" Margin="0,0,0,20">
+                    <local:Card.Header>
+                        <TextBlock Text="🔍 Search &amp; Filters" 
+                                  FontSize="16" 
+                                  FontWeight="SemiBold"/>
+                    </local:Card.Header>
+                    
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- SearchBox -->
+                        <local:SearchBox Grid.Column="0" 
+                                        Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
+                                        Placeholder="Search products by name or category..."
+                                        Margin="0,0,10,0"/>
+
+                        <!-- ComboBox -->
+                        <ComboBox Grid.Column="1"
+                                 ItemsSource="{Binding Categories}"
+                                 SelectedItem="{Binding SelectedCategory}"
+                                 Style="{StaticResource ModernComboBox}"
+                                 Margin="0,0,10,0"/>
+
+                        <!-- IconButton -->
+                        <local:IconButton Grid.Column="2"
+                                         Icon="🔄"
+                                         Text="Refresh"
+                                         Command="{Binding RefreshCommand}"
+                                         Background="{StaticResource SecondaryBrush}"/>
+
+                        <!-- DateRangePicker -->
+                        <local:DateRangePicker Grid.Row="1" 
+                                              Grid.ColumnSpan="3"
+                                              StartDate="{Binding StartDate}"
+                                              EndDate="{Binding EndDate}"
+                                              Margin="0,10,0,0"
+                                              Placeholder="Select date range"/>
+                    </Grid>
+                </local:Card>
+
+                <!-- Stats Cards -->
+                <TextBlock Text="📊 Statistics" 
+                          Style="{StaticResource SectionHeader}"
+                          Margin="0,0,0,10"/>
+                
+                <UniformGrid Columns="4" Margin="0,0,0,20">
+                    <local:StatsCard Title="Total Sales" 
+                                    Value="$45,231" 
+                                    Icon="💰"
+                                    IconBackground="{StaticResource SecondaryBrush}"
+                                    ChangePercent="+12.5%"
+                                    IsPositiveChange="True"
+                                    Margin="0,0,10,0"/>
+                    
+                    <local:StatsCard Title="Orders" 
+                                    Value="1,234" 
+                                    Icon="📦"
+                                    IconBackground="{StaticResource PrimaryBrush}"
+                                    ChangePercent="+8.2%"
+                                    IsPositiveChange="True"
+                                    Margin="5,0"/>
+                    
+                    <local:StatsCard Title="Customers" 
+                                    Value="3,456" 
+                                    Icon="👥"
+                                    IconBackground="{StaticResource AccentBrush}"
+                                    ChangePercent="-2.4%"
+                                    IsPositiveChange="False"
+                                    Margin="5,0"/>
+                    
+                    <local:StatsCard Title="Products" 
+                                    Value="{Binding TotalItems}" 
+                                    Icon="📱"
+                                    IconBackground="{StaticResource InfoBrush}"
+                                    ChangePercent="+5.1%"
+                                    IsPositiveChange="True"
+                                    Margin="10,0,0,0"/>
+                </UniformGrid>
+
+                <!-- Tabs with ClosableTabControl -->
+                <local:ClosableTabControl x:Name="MainTabs" 
+                                         CanCloseTabs="True"
+                                         SelectedIndex="{Binding SelectedTabIndex}"
+                                         Margin="0,0,0,20">
+                    
+                    <!-- Tab 1: Data Grid -->
+                    <local:ClosableTabItem Header="📋 Products" CanClose="False">
+                        <local:Card IsHoverable="False">
+                            <StackPanel>
+                                <!-- FilterableDataGrid -->
+                                <local:FilterableDataGrid x:Name="ProductGrid"
+                                                         ItemsSource="{Binding Products}"
+                                                         EnableFiltering="True"
+                                                         Height="300"
+                                                         Style="{StaticResource ModernDataGrid}"
+                                                         AutoGenerateColumns="False">
+                                    <local:FilterableDataGrid.Columns>
+                                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60"/>
+                                        <DataGridTextColumn Header="Product Name" Binding="{Binding Name}" Width="*"/>
+                                        <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="120"/>
+                                        <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=C}" Width="100"/>
+                                        <DataGridTextColumn Header="Stock" Binding="{Binding Stock}" Width="80"/>
+                                        <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100"/>
+                                        <DataGridTextColumn Header="Created" Binding="{Binding CreatedDate, StringFormat=d}" Width="100"/>
+                                    </local:FilterableDataGrid.Columns>
+                                </local:FilterableDataGrid>
+
+                                <!-- Pagination -->
+                                <local:Pagination TotalItems="{Binding TotalItems}"
+                                                CurrentPage="{Binding CurrentPage}"
+                                                PageSize="10"
+                                                Margin="0,15,0,0"
+                                                HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </local:Card>
+                    </local:ClosableTabItem>
+
+                    <!-- Tab 2: Form Controls -->
+                    <local:ClosableTabItem Header="📝 Form Controls" CanClose="True">
+                        <local:Card IsHoverable="False">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                    <!-- NumericUpDown -->
+                                    <TextBlock Text="Quantity:" Style="{StaticResource FieldLabel}"/>
+                                    <local:NumericUpDown Value="{Binding Quantity}"
+                                                        Minimum="0"
+                                                        Maximum="100"
+                                                        Increment="1"
+                                                        DecimalPlaces="0"
+                                                        Margin="0,0,0,15"/>
+
+                                    <!-- ToggleSwitch -->
+                                    <TextBlock Text="Enable Feature:" Style="{StaticResource FieldLabel}"/>
+                                    <local:ToggleSwitch IsOn="{Binding IsEnabled}"
+                                                       OnText="ON"
+                                                       OffText="OFF"
+                                                       Margin="0,0,0,15"/>
+
+                                    <!-- FileUpload -->
+                                    <TextBlock Text="Upload Document:" Style="{StaticResource FieldLabel}"/>
+                                    <local:FileUpload FileName="{Binding FileName}"
+                                                     FilePath="{Binding FilePath}"
+                                                     Filter="All Files (*.*)|*.*"
+                                                     Placeholder="Choose a file..."
+                                                     Margin="0,0,0,15"/>
+
+                                    <!-- CheckBox -->
+                                    <CheckBox Content="I agree to terms and conditions"
+                                             Style="{StaticResource ModernCheckBox}"
+                                             Margin="0,0,0,15"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                    <!-- TextBox -->
+                                    <TextBlock Text="Full Name:" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="John Doe"
+                                            Style="{StaticResource ModernTextBox}"
+                                            Margin="0,0,0,15"/>
+
+                                    <!-- TextBox (Email) -->
+                                    <TextBlock Text="Email:" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="john.doe@example.com"
+                                            Style="{StaticResource ModernTextBox}"
+                                            Margin="0,0,0,15"/>
+
+                                    <!-- Buttons -->
+                                    <TextBlock Text="Actions:" Style="{StaticResource FieldLabel}"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                        <Button Content="Primary" 
+                                               Style="{StaticResource ModernButton}"
+                                               Margin="0,0,10,0"/>
+                                        <Button Content="Success" 
+                                               Style="{StaticResource SuccessButton}"
+                                               Margin="0,0,10,0"/>
+                                        <Button Content="Danger" 
+                                               Style="{StaticResource DangerButton}"/>
+                                    </StackPanel>
+
+                                    <!-- RippleButton -->
+                                    <TextBlock Text="Ripple Effect:" Style="{StaticResource FieldLabel}"/>
+                                    <local:RippleButton Content="Click Me!"
+                                                       RippleColor="#50FFFFFF"
+                                                       Background="{StaticResource AccentBrush}"
+                                                       Foreground="White"
+                                                       Padding="20,10"
+                                                       HorizontalAlignment="Left"/>
+                                </StackPanel>
+                            </Grid>
+                        </local:Card>
+                    </local:ClosableTabItem>
+
+                    <!-- Tab 3: Advanced Controls -->
+                    <local:ClosableTabItem Header="⚙️ Advanced" CanClose="True">
+                        <StackPanel>
+                            <!-- ProgressTracker -->
+                            <local:Card IsHoverable="False" Margin="0,0,0,15">
+                                <local:Card.Header>
+                                    <TextBlock Text="Progress Tracker" FontSize="16" FontWeight="SemiBold"/>
+                                </local:Card.Header>
+                                
+                                <StackPanel>
+                                    <local:ProgressTracker x:Name="ProgressTrackerControl"
+                                                          CurrentStep="{Binding CurrentStep}"
+                                                          Orientation="Horizontal"
+                                                          Margin="0,0,0,15"/>
+                                    
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="← Previous"
+                                               Command="{Binding PreviousStepCommand}"
+                                               Style="{StaticResource SecondaryButton}"
+                                               Margin="0,0,10,0"/>
+                                        <Button Content="Next →"
+                                               Command="{Binding NextStepCommand}"
+                                               Style="{StaticResource ModernButton}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </local:Card>
+
+                            <!-- Accordion -->
+                            <local:Card IsHoverable="False">
+                                <local:Card.Header>
+                                    <TextBlock Text="Accordion / FAQ" FontSize="16" FontWeight="SemiBold"/>
+                                </local:Card.Header>
+                                
+                                <local:Accordion x:Name="AccordionControl" SingleExpand="True">
+                                    <local:AccordionItem Header="What is XTStyle?" IsExpanded="{Binding IsAccordion1Expanded}">
+                                        <TextBlock Text="XTStyle is a modern WPF control library with 21+ custom controls, supporting Light/Dark themes and smooth animations."
+                                                  TextWrapping="Wrap"
+                                                  Margin="10"/>
+                                    </local:AccordionItem>
+                                    
+                                    <local:AccordionItem Header="How to use it?" IsExpanded="{Binding IsAccordion2Expanded}">
+                                        <TextBlock Text="Simply add a reference to XTStyle.dll, merge the Generic.xaml resource dictionary, and start using the controls in your XAML!"
+                                                  TextWrapping="Wrap"
+                                                  Margin="10"/>
+                                    </local:AccordionItem>
+                                    
+                                    <local:AccordionItem Header="Is it free?">
+                                        <TextBlock Text="Yes! XTStyle is completely free to use in your projects."
+                                                  TextWrapping="Wrap"
+                                                  Margin="10"/>
+                                    </local:AccordionItem>
+                                </local:Accordion>
+                            </local:Card>
+                        </StackPanel>
+                    </local:ClosableTabItem>
+                </local:ClosableTabControl>
+
+                <!-- Empty State Example -->
+                <local:Card IsHoverable="False" Margin="0,0,0,20" Visibility="Collapsed">
+                    <local:EmptyState Icon="📭"
+                                     Title="No Data Available"
+                                     Message="There are no items to display at this time.">
+                        <local:EmptyState.ActionButton>
+                            <Button Content="Add New Item" 
+                                   Command="{Binding AddProductCommand}"
+                                   Style="{StaticResource ModernButton}"/>
+                        </local:EmptyState.ActionButton>
+                    </local:EmptyState>
+                </local:Card>
+
+                <!-- Loading Spinner & Modal Demo -->
+                <local:Card IsHoverable="False">
+                    <local:Card.Header>
+                        <TextBlock Text="Other Controls" FontSize="16" FontWeight="SemiBold"/>
+                    </local:Card.Header>
+                    
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <!-- Loading Spinner -->
+                        <StackPanel Margin="0,0,30,0" HorizontalAlignment="Center">
+                            <TextBlock Text="Loading Spinner:" 
+                                      Style="{StaticResource FieldLabel}"
+                                      HorizontalAlignment="Center"/>
+                            <local:LoadingSpinner IsSpinning="{Binding IsLoading}"
+                                                 Diameter="50"
+                                                 SpinnerColor="{StaticResource PrimaryBrush}"
+                                                 Thickness="4"/>
+                        </StackPanel>
+
+                        <!-- Modal Dialog Button -->
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="Modal Dialog:" 
+                                      Style="{StaticResource FieldLabel}"
+                                      HorizontalAlignment="Center"/>
+                            <Button Content="Show Modal"
+                                   Command="{Binding ShowModalCommand}"
+                                   Style="{StaticResource ModernButton}"
+                                   Padding="20,10"/>
+                        </StackPanel>
+
+                        <!-- Badges -->
+                        <StackPanel Margin="30,0,0,0" HorizontalAlignment="Center">
+                            <TextBlock Text="Badges:" 
+                                      Style="{StaticResource FieldLabel}"
+                                      HorizontalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <local:Badge Text="NEW" Type="Primary" Margin="0,0,5,0"/>
+                                <local:Badge Text="5" Type="Danger" Margin="0,0,5,0"/>
+                                <local:Badge Text="✓" Type="Success" Margin="0,0,5,0"/>
+                                <local:Badge IsDot="True" Type="Warning"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </local:Card>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Modal Dialog -->
+        <local:ModalDialog IsOpen="{Binding ShowModal}"
+                          Title="Confirm Action"
+                          CloseOnOverlayClick="True">
+            <StackPanel Width="300">
+                <TextBlock Text="Are you sure you want to proceed with this action?"
+                          TextWrapping="Wrap"
+                          Margin="0,0,0,20"
+                          Foreground="{StaticResource TextPrimaryBrush}"/>
+                
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Cancel"
+                           Command="{Binding ConfirmCommand}"
+                           Style="{StaticResource SecondaryButton}"
+                           Margin="0,0,10,0"/>
+                    <Button Content="Confirm"
+                           Command="{Binding ConfirmCommand}"
+                           Style="{StaticResource ModernButton}"/>
+                </StackPanel>
+            </StackPanel>
+        </local:ModalDialog>
+
+        <!-- Loading Overlay -->
+        <Grid Grid.Row="0" 
+              Grid.RowSpan="2"
+              Background="#80000000"
+              Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
+              Panel.ZIndex="999">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <local:LoadingSpinner IsSpinning="True"
+                                     Diameter="60"
+                                     SpinnerColor="White"
+                                     Thickness="5"/>
+                <TextBlock Text="Loading..."
+                          Foreground="White"
+                          FontSize="16"
+                          Margin="0,15,0,0"
+                          HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
