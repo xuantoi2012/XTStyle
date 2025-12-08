@@ -202,7 +202,7 @@
                                 <!-- Previous Button -->
                                 <Button x:Name="PART_PreviousButton"
                                     Grid.Column="0"
-                                    Width="26" Height="26"
+                                    Width="20" Height="20"
                                     Background="Transparent"
                                     BorderThickness="0"
                                     Focusable="False"
@@ -212,7 +212,7 @@
                                             <Border Background="{TemplateBinding Background}"
                                                 x:Name="ButtonBorder"
                                                 CornerRadius="6">
-                                                <Path Data="M8,0 L0,6 L8,12"
+                                                <Path Data="M6,0 L0,7 L6,10"
                                                   Stroke="{StaticResource TextPrimaryBrush}"
                                                   StrokeThickness="2"
                                                   StrokeStartLineCap="Round"
@@ -234,7 +234,7 @@
                                     Grid.Column="1"
                                     Background="Transparent"
                                     BorderThickness="0"
-                                    FontSize="14"
+                                    FontSize="13"
                                     FontWeight="SemiBold"
                                     Foreground="{StaticResource TextPrimaryBrush}"
                                     HorizontalAlignment="Center"
@@ -265,7 +265,7 @@
                                 <!-- Next Button -->
                                 <Button x:Name="PART_NextButton"
                                     Grid.Column="2"
-                                    Width="26" Height="26"
+                                    Width="20" Height="20"
                                     Background="Transparent"
                                     BorderThickness="0"
                                     Focusable="False"
@@ -275,7 +275,7 @@
                                             <Border Background="{TemplateBinding Background}"
                                                 x:Name="ButtonBorder"
                                                 CornerRadius="6">
-                                                <Path Data="M0,0 L8,6 L0,12"
+                                                <Path Data="M0,0 L7,6 L0,10"
                                                   Stroke="{StaticResource TextPrimaryBrush}"
                                                   StrokeThickness="2"
                                                   StrokeStartLineCap="Round"

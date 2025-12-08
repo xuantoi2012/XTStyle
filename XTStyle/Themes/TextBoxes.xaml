@@ -6,7 +6,22 @@
         <ResourceDictionary Source="pack://application:,,,/XTStyle;component/Themes/Fonts.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <!-- Modern TextBox Style -->
+    <!-- ✅ Validation Error Template -->
+    <ControlTemplate x:Key="ValidationErrorTemplate">
+        <StackPanel>
+            <!-- Original control -->
+            <AdornedElementPlaceholder x:Name="controlWithError"/>
+
+            <!-- Error message -->
+            <TextBlock Text="{Binding [0].ErrorContent}" 
+                       Foreground="#EF4444"
+                       FontSize="11"
+                       Margin="0,4,0,0"
+                       TextWrapping="Wrap"/>
+        </StackPanel>
+    </ControlTemplate>
+
+    <!-- ✅ Modern TextBox Style -->
     <Style x:Key="ModernTextBox" TargetType="TextBox">
         <Setter Property="Background" Value="{StaticResource CardBrush}"/>
         <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
@@ -15,36 +30,9 @@
         <Setter Property="Padding" Value="4,2"/>
         <Setter Property="FontSize" Value="{StaticResource FontSizeRegular}"/>
         <Setter Property="FontFamily" Value="{StaticResource DefaultFontFamily}"/>
+        <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="TextBox">
-                    <Border x:Name="Border"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="6">
-                        <ScrollViewer x:Name="PART_ContentHost"
-                                      Margin="{TemplateBinding Padding}"
-                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsFocused" Value="True">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
-                            <Setter TargetName="Border" Property="BorderThickness" Value="1"/>
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Background" Value="{StaticResource BackgroundAltBrush}"/>
-                            <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!-- ✅ TextBox với Placeholder (dùng Tag để set placeholder) -->
-    <Style x:Key="ModernTextBoxWithPlaceholder" TargetType="TextBox" BasedOn="{StaticResource ModernTextBox}">
+        <Setter Property="Validation.ErrorTemplate" Value="{StaticResource ValidationErrorTemplate}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
@@ -59,7 +47,7 @@
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
 
-                        <!-- Placeholder Text -->
+                        <!-- ✅ Placeholder Text (hiện khi Tag không null và Text empty) -->
                         <TextBlock x:Name="PlaceholderText"
                                    Text="{TemplateBinding Tag}"
                                    Foreground="#9CA3AF"
@@ -72,7 +60,7 @@
                     </Grid>
 
                     <ControlTemplate.Triggers>
-                        <!-- Show placeholder when text is empty -->
+                        <!-- ✅ Show placeholder when text is empty (chỉ cần check Text) -->
                         <Trigger Property="Text" Value="">
                             <Setter TargetName="PlaceholderText" Property="Visibility" Value="Visible"/>
                         </Trigger>
@@ -80,9 +68,36 @@
                             <Setter TargetName="PlaceholderText" Property="Visibility" Value="Visible"/>
                         </Trigger>
 
-                        <!-- Focus effect -->
-                        <Trigger Property="IsFocused" Value="True">
+                        <!-- ✅ Hide placeholder if Tag is null/empty -->
+                        <Trigger Property="Tag" Value="{x:Null}">
+                            <Setter TargetName="PlaceholderText" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+                        <Trigger Property="Tag" Value="">
+                            <Setter TargetName="PlaceholderText" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+
+                        <!-- ✅ MouseOver effect - CHỈ khi KHÔNG có lỗi -->
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="Validation.HasError" Value="False"/>
+                            </MultiTrigger.Conditions>
                             <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                        </MultiTrigger>
+
+                        <!-- ✅ Focus effect - CHỈ khi KHÔNG có lỗi -->
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsFocused" Value="True"/>
+                                <Condition Property="Validation.HasError" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                            <Setter TargetName="Border" Property="BorderThickness" Value="1"/>
+                        </MultiTrigger>
+
+                        <!-- ✅ Validation error - ĐỎ kể cả khi focus/hover -->
+                        <Trigger Property="Validation.HasError" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#EF4444"/>
                             <Setter TargetName="Border" Property="BorderThickness" Value="1"/>
                         </Trigger>
 
@@ -90,6 +105,7 @@
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Background" Value="{StaticResource BackgroundAltBrush}"/>
                             <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}"/>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
                             <Setter TargetName="PlaceholderText" Property="Foreground" Value="{StaticResource TextDisabledBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -131,7 +147,7 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsFocused" Value="True">
                             <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
-                            <Setter TargetName="Border" Property="BorderThickness" Value="2"/>
+                            <Setter TargetName="Border" Property="BorderThickness" Value="1"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Background" Value="{StaticResource BackgroundAltBrush}"/>

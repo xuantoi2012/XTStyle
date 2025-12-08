@@ -1,0 +1,111 @@
+﻿<Window x:Class="XTStyle.Themes.ModernMessageBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title=""
+        Width="480"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        RenderOptions.BitmapScalingMode="HighQuality"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType"
+        SnapsToDevicePixels="True">
+
+    <Window.Resources>
+        <Geometry x:Key="InfoIcon">M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z</Geometry>
+        <Geometry x:Key="SuccessIcon">M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z</Geometry>
+        <Geometry x:Key="WarningIcon">M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z</Geometry>
+        <Geometry x:Key="ErrorIcon">M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z</Geometry>
+        <Geometry x:Key="QuestionIcon">M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z</Geometry>
+        </Window.Resources>
+
+        <!-- ✅ Tăng Margin để có chỗ cho shadow lan rộng -->
+        <Border Background="White"
+            CornerRadius="12"
+            BorderThickness="1"
+            BorderBrush="{StaticResource PrimaryBrush}"
+            Margin="30">
+            <Border.Effect>
+                <!-- ✅ Tăng BlurRadius và ShadowDepth để shadow lan rộng hơn -->
+                <DropShadowEffect Color="#000000" 
+                            Opacity="0.15" 
+                            BlurRadius="40" 
+                            ShadowDepth="8" 
+                            Direction="270"/>
+            </Border.Effect>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Header -->
+                <Border Grid.Row="0"
+                    x:Name="HeaderBorder"
+                    Background="{StaticResource BorderBrush}"
+                    CornerRadius="12,12,0,0"
+                    Padding="20,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Icon -->
+                            <Border x:Name="IconBorder"
+                            Grid.Column="0"
+                            Width="35"
+                            Height="35"
+                            CornerRadius="20"
+                            Background="#3B82F6"
+                            Margin="0,0,16,0">
+                                <Path x:Name="IconPath"
+                              Data="{StaticResource InfoIcon}"
+                              Fill="White"
+                              Stretch="Uniform"
+                              Width="18"
+                              Height="18"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"/>
+                            </Border>
+
+                            <!-- Title -->
+                            <TextBlock x:Name="TitleText"
+                               Grid.Column="1"
+                               Text="Thông báo"
+                               FontSize="15"
+                               FontWeight="SemiBold"
+                               Foreground="#1F2937"
+                               VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- Content -->
+                <Border Grid.Row="1" Padding="15">
+                    <TextBlock x:Name="MessageText"
+                           Text="Nội dung thông báo"
+                           FontSize="12"
+                           Foreground="#4B5563"
+                           TextWrapping="Wrap"
+                           LineHeight="18"/>
+                </Border>
+
+                <!-- Footer Buttons -->
+                <Border Grid.Row="2"
+                    CornerRadius="0,0,12,12"
+                    Padding="24,16">
+                    <StackPanel x:Name="ButtonPanel"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                        <!-- Buttons will be added dynamically -->
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+</Window>
